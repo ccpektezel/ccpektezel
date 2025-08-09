@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Logistics Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Logistics Dashboard</h1>
+        {% if session.get('user') %}
+        <div class="user-controls">
+            <span class="user">Welcome, {{ session['user'] }}</span>
+            <a class="login-btn" href="{{ url_for('logout') }}">Logout</a>
+        </div>
+        {% else %}
+        <a class="login-btn" href="{{ url_for('login') }}">Login</a>
+        {% endif %}
+    </header>
+    <section class="metrics">
+        <div class="metric">
+            <h2>Shipments Processed</h2>
+            <p>{{ metrics['shipments_processed'] }}</p>
+        </div>
+        <div class="metric">
+            <h2>Shipments In Transit</h2>
+            <p>{{ metrics['shipments_in_transit'] }}</p>
+        </div>
+        <div class="metric">
+            <h2>Avg Delivery Time (days)</h2>
+            <p>{{ metrics['average_delivery_time'] }}</p>
+        </div>
+    </section>
+    <section>
+        <canvas id="shipmentsChart" width="400" height="200"></canvas>
+    </section>
+    <script>
+        const ctx = document.getElementById('shipmentsChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'Shipments Processed',
+                    data: [180, 200, 150, 170, 220, 190, 170],
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
